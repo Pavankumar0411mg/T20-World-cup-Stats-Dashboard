@@ -1,46 +1,74 @@
-# ICC Men's T20 World Cup 2026 - Complete Dataset
+🏏 ICC T20 World Cup 2026 Analytics Dashboard
 
-## Overview
-The 10th edition of the ICC Men's T20 World Cup, co-hosted by India & Sri Lanka (Feb 7 - Mar 8, 2026). 
-20 teams, 55 matches, 8 venues. **India** won the tournament, defeating **New Zealand** by 96 runs in the final to become the first team to defend the T20 World Cup title and the first to win 3 T20 World Cup titles.
+An interactive cricket analytics dashboard built using HTML, CSS, and JavaScript to visualize complete statistics of the ICC Men's T20 World Cup 2026.
 
-## Files
+This project transforms raw cricket datasets into insightful visual dashboards for better understanding of player and team performances.
 
-| File | Description | Rows |
-|------|-------------|------|
-| `tournament_summary.csv` | Key facts and records about the tournament | 22 |
-| `matches.csv` | All 55 matches with results, venues, toss details | 55 |
-| `squads.csv` | All 20 teams' 15-player squads with roles | 300 |
-| `batting_stats.csv` | Top 19 run scorers of the tournament | 19 |
-| `bowling_stats.csv` | Top 15 wicket takers of the tournament | 15 |
-| `points_table.csv` | Group stage + Super Eight standings | 28 |
-| `key_scorecards.csv` | Ball-by-ball batting scorecards for Final + Semi-Finals | 41 |
-| `venues.csv` | All 8 venues with city, country, capacity | 8 |
-| `awards.csv` | Tournament awards and individual honors | 8 |
+📌 Project Overview
 
-## Key Statistics
-- **Most Runs**: Sahibzada Farhan (PAK) - 383 runs (record for single T20 WC edition)
-- **Most Wickets**: Jasprit Bumrah & Varun Chakravarthy (IND) - 14 each
-- **Player of the Tournament**: Sanju Samson (IND)
-- **Fastest Century**: Finn Allen (NZ) - 33 balls (SF1 vs SA)
-- **Best Bowling**: Romario Shepherd (WI) - 5/20 vs Scotland
-- **Centuries in Tournament**: 6 (record for any T20 WC edition)
-- **Highest Team Total**: India 255/5 vs New Zealand (Final)
+This dashboard provides detailed insights into:
 
-## Notable Records Set
-1. India became the first team to defend the T20 World Cup
-2. India became the first team to win 3 T20 World Cup titles
-3. India became the first host team to win the T20 World Cup
-4. Finn Allen hit the fastest century in T20 World Cup history (33 balls)
-5. Sahibzada Farhan scored the most runs in a single T20 WC edition (383)
-6. Sahibzada Farhan scored 2 centuries in a single edition (first ever)
-7. 6 centuries scored - most in any single T20 WC edition
+🏏 Batting performance (runs, strike rate, averages)
+🎯 Bowling analysis (wickets, economy, performance)
+🏆 Awards and achievements
+📊 Points table & standings
+📍 Venue-wise match distribution
+📅 Match summaries & scorecards
+👥 Team squads and player details
+📂 Dataset Files Used
 
-## Data Sources
-Data compiled from ESPNcricinfo, ICC official website, Wikipedia, and other cricket news sources. Tournament concluded March 8, 2026.
+The project uses structured CSV datasets:
 
-## License
-This dataset is for educational and analytical purposes. 
+📁 Dataset Files
+├── awards.csv              # Player awards and recognitions
+├── batting_stats.csv       # Batting performance data
+├── bowling_stats.csv       # Bowling statistics
+├── key_scorecards.csv      # Important match scorecards
+├── matches.csv             # Match-level details
+├── points_table.csv        # Team standings
+├── squads.csv              # Team squad details
+├── tournament_summary.csv  # Overall tournament insights
+├── venues.csv              # Match venues information
+📊 Dashboard File
+📄 icc_t20_wc_2026_dashboard.html
+Main file of the project
+Contains all visualizations and UI components
+Open directly in browser to view dashboard
+🚀 Features
+📊 Interactive cricket data visualization
+🏏 Complete player stats (batting & bowling)
+📈 Team performance insights
+🏆 Tournament summary & awards
+📍 Venue-based analysis
+💡 Clean and user-friendly UI
+🛠️ Technologies Used
+HTML5
+CSS3
+JavaScript
+CSV Data Handling
+▶️ How to Run the Project
+Clone the repository:
+git clone https://github.com/Pavankumar0411mg/T20-World-cup-Stats-Dashboard.git
+Open the folder
+Run the dashboard:
+Double-click or open in browser:
+icc_t20_wc_2026_dashboard.html
+📸 Screenshots
 
-## Tags
-cricket, t20, world-cup, 2026, india, icc, sports-analytics
+(Add screenshots of your dashboard here for better presentation)
+
+🎯 Future Enhancements
+🔗 Integration with live cricket APIs
+📊 Advanced filters (player, team, venue)
+📱 Mobile responsive design
+📉 Power BI / Tableau version
+🤖 AI-based match predictions & insights
+🤝 Contributing
+
+Feel free to fork this repository and contribute improvements.
+
+👨‍💻 Author
+
+Pavan Kumar M G
+
+GitHub: https://github.com/Pavankumar0411mg
