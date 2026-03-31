@@ -1,0 +1,56 @@
+match_no,stage,group,date,venue,city,team1,team2,toss_winner,toss_decision,winner,result,margin
+1,Group,A,2026-02-07,R. Premadasa Stadium,Colombo,Netherlands,Pakistan,Pakistan,bat,Pakistan,Pakistan won by 3 wickets,3 wkts (3b rem)
+2,Group,C,2026-02-07,Eden Gardens,Kolkata,West Indies,Scotland,West Indies,bat,West Indies,West Indies won by 35 runs,35 runs
+3,Group,A,2026-02-07,Wankhede Stadium,Mumbai,India,USA,India,bat,India,India won by 29 runs,29 runs
+4,Group,D,2026-02-08,M.A. Chidambaram Stadium,Chennai,Afghanistan,New Zealand,Afghanistan,bat,New Zealand,New Zealand won by 5 wickets,5 wkts (13b rem)
+5,Group,C,2026-02-08,Wankhede Stadium,Mumbai,England,Nepal,England,bat,England,England won by 4 runs,4 runs
+6,Group,B,2026-02-08,R. Premadasa Stadium,Colombo,Sri Lanka,Ireland,Sri Lanka,bat,Sri Lanka,Sri Lanka won by 20 runs,20 runs
+7,Group,C,2026-02-09,Eden Gardens,Kolkata,Scotland,Italy,Scotland,bat,Scotland,Scotland won by 73 runs,73 runs
+8,Group,B,2026-02-09,R. Premadasa Stadium,Colombo,Oman,Zimbabwe,Zimbabwe,field,Zimbabwe,Zimbabwe won,Result available
+9,Group,D,2026-02-09,Narendra Modi Stadium,Ahmedabad,South Africa,Canada,South Africa,field,South Africa,South Africa won,Result available
+10,Group,A,2026-02-10,Arun Jaitley Stadium,Delhi,Namibia,Netherlands,Netherlands,,Netherlands,Netherlands won,Result available
+11,Group,D,2026-02-10,M.A. Chidambaram Stadium,Chennai,New Zealand,UAE,New Zealand,,New Zealand,New Zealand won,Result available
+12,Group,A,2026-02-10,Sinhalese Sports Club,Colombo,Pakistan,USA,Pakistan,bat,Pakistan,Pakistan won (Farhan century - 383 campaign start),Result available
+13,Group,D,2026-02-11,Narendra Modi Stadium,Ahmedabad,South Africa,Afghanistan,South Africa,field,South Africa,South Africa won,Result available
+14,Group,B,2026-02-11,R. Premadasa Stadium,Colombo,Australia,Ireland,Australia,,Australia,Australia won,Result available
+15,Group,C,2026-02-11,Wankhede Stadium,Mumbai,England,West Indies,England,,England,England won,Result available
+16,Group,B,2026-02-12,Pallekele Cricket Stadium,Kandy,Sri Lanka,Oman,Sri Lanka,field,Sri Lanka,Sri Lanka won (Nissanka century),Result available
+17,Group,C,2026-02-12,Wankhede Stadium,Mumbai,Nepal,Italy,Nepal,,Nepal,Nepal won,Result available
+18,Group,A,2026-02-12,Arun Jaitley Stadium,Delhi,India,Namibia,India,bat,India,India won by 93 runs,93 runs
+19,Group,B,2026-02-13,R. Premadasa Stadium,Colombo,Australia,Zimbabwe,Zimbabwe,field,No Result,No play due to rain,Abandoned
+20,Group,D,2026-02-13,Arun Jaitley Stadium,Delhi,Canada,UAE,Canada,field,Canada,Canada won,Result available
+21,Group,A,2026-02-13,M.A. Chidambaram Stadium,Chennai,Netherlands,USA,Netherlands,,Netherlands,Netherlands won,Result available
+22,Group,B,2026-02-14,R. Premadasa Stadium,Colombo,Ireland,Oman,Ireland,field,Ireland,Ireland won,Result available
+23,Group,C,2026-02-14,Eden Gardens,Kolkata,England,Scotland,England,,England,England won,Result available
+24,Group,D,2026-02-14,Narendra Modi Stadium,Ahmedabad,New Zealand,South Africa,New Zealand,,New Zealand,New Zealand won,Result available
+25,Group,C,2026-02-15,Wankhede Stadium,Mumbai,Nepal,West Indies,West Indies,,West Indies,West Indies won,Result available
+26,Group,A,2026-02-15,M.A. Chidambaram Stadium,Chennai,Namibia,USA,USA,,USA,USA won,Result available
+27,Group,A,2026-02-15,R. Premadasa Stadium,Colombo,India,Pakistan,India,bat,India,India won,Result available
+28,Group,D,2026-02-16,Arun Jaitley Stadium,Delhi,Afghanistan,UAE,Afghanistan,,Afghanistan,Afghanistan won,Result available
+29,Group,C,2026-02-16,Eden Gardens,Kolkata,England,Italy,England,,England,England won (Brook century),Result available
+30,Group,B,2026-02-16,Pallekele Cricket Stadium,Kandy,Australia,Sri Lanka,Australia,field,Sri Lanka,Sri Lanka won,Result available
+31,Group,D,2026-02-17,M.A. Chidambaram Stadium,Chennai,Canada,New Zealand,Canada,field,New Zealand,New Zealand won (Yuvraj Samra CAN century),Result available
+32,Group,B,2026-02-17,Pallekele Cricket Stadium,Kandy,Ireland,Zimbabwe,Zimbabwe,field,No Result,No play due to rain,Abandoned
+33,Group,C,2026-02-17,Wankhede Stadium,Mumbai,Nepal,Scotland,Scotland,,Scotland,Scotland won,Result available
+34,Group,D,2026-02-18,Arun Jaitley Stadium,Delhi,South Africa,UAE,South Africa,field,South Africa,South Africa won,Result available
+35,Group,A,2026-02-18,R. Premadasa Stadium,Colombo,Namibia,Pakistan,Pakistan,bat,Pakistan,Pakistan won (Farhan 2nd century),Result available
+36,Group,A,2026-02-18,Narendra Modi Stadium,Ahmedabad,India,Netherlands,India,bat,India,India won,Result available
+37,Group,C,2026-02-19,Eden Gardens,Kolkata,Italy,West Indies,West Indies,,West Indies,West Indies won,Result available
+38,Group,B,2026-02-19,R. Premadasa Stadium,Colombo,Sri Lanka,Zimbabwe,Sri Lanka,bat,Sri Lanka,Sri Lanka won,Result available
+39,Group,D,2026-02-19,M.A. Chidambaram Stadium,Chennai,Afghanistan,Canada,Afghanistan,,Canada,Canada won (Junaid Siddique UAE 5/35 earlier),Result available
+40,Group,B,2026-02-20,Pallekele Cricket Stadium,Kandy,Australia,Oman,Australia,field,Australia,Australia won,Result available
+41,Super Eight,1,2026-02-21,R. Premadasa Stadium,Colombo,South Africa,Zimbabwe,South Africa,,South Africa,South Africa won,Result available
+42,Super Eight,1,2026-02-22,Pallekele Cricket Stadium,Kandy,India,West Indies,India,field,India,India won,Result available
+43,Super Eight,2,2026-02-22,Narendra Modi Stadium,Ahmedabad,England,Sri Lanka,England,,England,England won,Result available
+44,Super Eight,2,2026-02-23,Wankhede Stadium,Mumbai,New Zealand,Pakistan,New Zealand,,No Result,No play due to rain,Abandoned
+45,Super Eight,1,2026-02-24,Pallekele Cricket Stadium,Kandy,West Indies,Zimbabwe,West Indies,,West Indies,West Indies won,Result available
+46,Super Eight,1,2026-02-25,R. Premadasa Stadium,Colombo,India,South Africa,India,,India,India won,Result available
+47,Super Eight,2,2026-02-26,Narendra Modi Stadium,Ahmedabad,Pakistan,Sri Lanka,Pakistan,bat,Pakistan,Pakistan won (Shadab 1000 T20I runs),Result available
+48,Super Eight,2,2026-02-26,M.A. Chidambaram Stadium,Chennai,England,New Zealand,England,,England,England won,Result available
+49,Super Eight,1,2026-02-27,R. Premadasa Stadium,Colombo,South Africa,West Indies,South Africa,,South Africa,South Africa won,Result available
+50,Super Eight,2,2026-02-28,Pallekele Cricket Stadium,Kandy,Sri Lanka,New Zealand,New Zealand,,New Zealand,New Zealand won (Shanaka 100 T20I sixes),Result available
+51,Super Eight,1,2026-03-01,Arun Jaitley Stadium,Delhi,Zimbabwe,South Africa,South Africa,field,South Africa,South Africa won,Result available
+52,Super Eight,1,2026-03-01,Eden Gardens,Kolkata,India,West Indies,India,field,India,India won (Samson 97*),Result available
+53,Semi-Final,SF1,2026-03-04,Eden Gardens,Kolkata,South Africa,New Zealand,,,New Zealand,New Zealand won by 9 wickets (43b rem),9 wkts
+54,Semi-Final,SF2,2026-03-05,Wankhede Stadium,Mumbai,India,England,India,,India,India won by 7 runs,7 runs
+55,Final,Final,2026-03-08,Narendra Modi Stadium,Ahmedabad,India,New Zealand,India,bat,India,India won by 96 runs,96 runs

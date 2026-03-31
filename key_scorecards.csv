@@ -1,0 +1,42 @@
+match,innings,team,player,runs,balls,fours,sixes,dismissal
+Final,1st,India,Abhishek Sharma,52,18,6,3,c Ravindra b Ravindra
+Final,1st,India,Sanju Samson,89,42,8,7,c Seifert b Neesham
+Final,1st,India,Suryakumar Yadav,35,25,3,1,c Mitchell b Neesham
+Final,1st,India,Ishan Kishan,54,28,4,4,c Santner b Neesham
+Final,1st,India,Shivam Dube,26,14,2,1,not out
+Final,1st,India,Tilak Varma,8,4,0,1,not out
+Final,2nd,New Zealand,Finn Allen,8,6,1,0,c Tilak b Axar
+Final,2nd,New Zealand,Rachin Ravindra,2,5,0,0,c Kishan b Bumrah
+Final,2nd,New Zealand,Glenn Phillips,5,7,0,0,b Axar
+Final,2nd,New Zealand,Tim Seifert,52,23,5,4,c Dube b Varun
+Final,2nd,New Zealand,Mark Chapman,15,12,1,1,c & b Pandya
+Final,2nd,New Zealand,Daryl Mitchell,28,22,2,1,c Abhishek b Axar
+Final,2nd,New Zealand,Mitchell Santner,22,17,1,2,c Samson b Bumrah
+Final,2nd,New Zealand,James Neesham,12,10,1,0,b Bumrah
+Final,2nd,New Zealand,Lockie Ferguson,4,6,0,0,c Tilak b Bumrah
+Final,2nd,New Zealand,Matt Henry,3,3,0,0,b Arshdeep
+Final,2nd,New Zealand,Jacob Duffy,0,3,0,0,c Tilak b Arshdeep
+SF2,1st,India,Abhishek Sharma,15,10,2,0,c Buttler b Archer
+SF2,1st,India,Sanju Samson,89,42,8,7,c Brook b Curran
+SF2,1st,India,Suryakumar Yadav,42,30,4,2,c Bethell b Rashid
+SF2,1st,India,Ishan Kishan,48,25,4,3,c Salt b Atkinson
+SF2,1st,India,Hardik Pandya,28,14,2,2,c Dawson b Wood
+SF2,1st,India,Shivam Dube,26,10,1,2,not out
+SF2,1st,India,Tilak Varma,8,5,1,0,not out
+SF2,2nd,England,Phil Salt,8,5,1,0,c sub b Pandya
+SF2,2nd,England,Jos Buttler,25,17,5,0,c Varun b Siraj
+SF2,2nd,England,Harry Brook,12,8,2,0,c Axar b Bumrah
+SF2,2nd,England,Jacob Bethell,105,48,8,7,run out
+SF2,2nd,England,Will Jacks,38,18,3,3,c Bumrah b Axar
+SF2,2nd,England,Liam Dawson,18,12,1,1,c Kishan b Arshdeep
+SF2,2nd,England,Sam Curran,15,10,1,1,c Dube b Bumrah
+SF2,2nd,England,Adil Rashid,8,5,1,0,not out
+SF1,1st,South Africa,Quinton de Kock,22,18,3,0,c Allen b Ravindra
+SF1,1st,South Africa,Aiden Markram,8,10,1,0,c Seifert b Ravindra
+SF1,1st,South Africa,Dewald Brevis,42,18,4,3,c Phillips b Ferguson
+SF1,1st,South Africa,Heinrich Klaasen,28,20,2,2,c Mitchell b Santner
+SF1,1st,South Africa,David Miller,18,15,1,1,b Ravindra
+SF1,1st,South Africa,Tristan Stubbs,12,10,1,0,c Allen b Neesham
+SF1,1st,South Africa,Marco Jansen,55,28,4,4,c Santner b Ravindra
+SF1,2nd,New Zealand,Finn Allen,100,33,10,8,not out
+SF1,2nd,New Zealand,Tim Seifert,65,35,7,3,not out
