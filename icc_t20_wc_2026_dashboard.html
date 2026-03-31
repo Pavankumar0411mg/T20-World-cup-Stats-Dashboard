@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICC Men's T20 World Cup 2026 — Analytics Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #05070f;
+    --surface: #0c0f1e;
+    --surface2: #12162b;
+    --border: #1e2440;
+    --accent: #f5a623;
+    --accent2: #e63946;
+    --accent3: #4cc9f0;
+    --gold: #ffd700;
+    --text: #e8eaf0;
+    --muted: #6b7298;
+    --india: #ff6b35;
+    --nz: #1a8cff;
+    --pak: #3ecf8e;
+    --eng: #c084fc;
+    --sa: #fbbf24;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grain */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+
+  /* HEADER */
+  header {
+    padding: 32px 0 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 36px;
+    background: linear-gradient(180deg, rgba(245,166,35,0.04) 0%, transparent 100%);
+  }
+
+  .header-inner {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding-bottom: 24px;
+    flex-wrap: wrap; gap: 16px;
+  }
+
+  .tournament-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 8px;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(42px, 6vw, 80px);
+    line-height: 0.9;
+    color: var(--text);
+    letter-spacing: 2px;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .header-meta {
+    text-align: right;
+    font-size: 13px; color: var(--muted); font-weight: 300;
+    line-height: 1.8;
+  }
+
+  .champion-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, rgba(255,107,53,0.2), rgba(245,166,35,0.2));
+    border: 1px solid rgba(255,107,53,0.4);
+    border-radius: 100px; padding: 6px 16px;
+    font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--india); margin-top: 8px;
+  }
+
+  /* NAV TABS */
+  .tabs {
+    display: flex; gap: 4px; margin-bottom: 32px;
+    border-bottom: 1px solid var(--border); padding-bottom: 0;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    padding: 10px 20px; font-size: 13px; font-weight: 700; letter-spacing: 0.5px;
+    cursor: pointer; border: none; background: transparent; color: var(--muted);
+    border-bottom: 2px solid transparent; white-space: nowrap;
+    text-transform: uppercase; transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* SECTIONS */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* STAT CARDS ROW */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px; margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 22px;
+    position: relative; overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .stat-card:hover { border-color: rgba(245,166,35,0.3); transform: translateY(-2px); }
+
+  .stat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--accent-line, var(--accent));
+  }
+
+  .stat-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; font-weight: 700; }
+  .stat-value { font-family: 'Bebas Neue', cursive; font-size: 38px; line-height: 1; color: var(--text); letter-spacing: 1px; }
+  .stat-sub { font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 300; }
+
+  /* GRID LAYOUTS */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } .three-col { grid-template-columns: 1fr; } }
+
+  /* PANELS */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .panel-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 20px; letter-spacing: 1.5px; color: var(--text);
+    margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+  }
+
+  .panel-title span {
+    width: 4px; height: 20px; border-radius: 2px;
+    background: var(--accent); display: block; flex-shrink: 0;
+  }
+
+  /* LEADERBOARD */
+  .leader-row {
+    display: grid; align-items: center; padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s; border-radius: 6px; gap: 12px;
+  }
+  .leader-row:last-child { border-bottom: none; }
+  .leader-row:hover { background: rgba(255,255,255,0.02); }
+
+  .batting-row { grid-template-columns: 32px 1fr 70px 70px 70px 70px; }
+  .bowling-row { grid-template-columns: 32px 1fr 60px 60px 70px 70px; }
+  .points-row { grid-template-columns: 28px 1fr 40px 40px 40px 80px 60px; }
+
+  .rank { font-family: 'Bebas Neue', cursive; font-size: 18px; color: var(--muted); width: 28px; text-align: center; }
+  .rank.gold { color: var(--gold); }
+  .rank.silver { color: #c0c0c0; }
+  .rank.bronze { color: #cd7f32; }
+
+  .player-info .name { font-weight: 700; font-size: 14px; }
+  .player-info .team-tag {
+    display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; padding: 2px 7px; border-radius: 4px; margin-top: 3px;
+  }
+
+  .stat-col { text-align: right; font-size: 14px; font-weight: 500; }
+  .stat-col .label { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+  .stat-col .val { font-weight: 700; }
+  .highlight-val { color: var(--accent); font-family: 'Bebas Neue', cursive; font-size: 22px; letter-spacing: 0.5px; }
+
+  .bar-bg { background: var(--surface2); border-radius: 100px; height: 6px; margin-top: 6px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 100px; background: var(--accent); transition: width 1s ease; }
+
+  .table-header {
+    display: grid; padding: 0 0 10px; margin-bottom: 4px;
+    border-bottom: 1px solid var(--border); font-size: 10px;
+    letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); font-weight: 700;
+  }
+
+  /* TEAM TAGS */
+  .tag-ind { background: rgba(255,107,53,0.15); color: var(--india); }
+  .tag-nz { background: rgba(26,140,255,0.15); color: var(--nz); }
+  .tag-pak { background: rgba(62,207,142,0.15); color: var(--pak); }
+  .tag-eng { background: rgba(192,132,252,0.15); color: var(--eng); }
+  .tag-sa { background: rgba(251,191,36,0.15); color: var(--sa); }
+  .tag-wi { background: rgba(230,57,70,0.15); color: var(--accent2); }
+  .tag-zim { background: rgba(76,201,240,0.15); color: var(--accent3); }
+  .tag-usa { background: rgba(255,255,255,0.1); color: #aaa; }
+  .tag-sl { background: rgba(62,207,142,0.12); color: #4CAF50; }
+
+  /* DONUT / VISUAL CHARTS */
+  .chart-wrap { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+
+  /* AWARDS */
+  .awards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .award-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px 20px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .award-card:hover { border-color: rgba(245,166,35,0.35); transform: translateY(-3px); }
+  .award-icon { font-size: 28px; margin-bottom: 8px; }
+  .award-type { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 4px; }
+  .award-name { font-weight: 700; font-size: 16px; margin-bottom: 2px; }
+  .award-team { font-size: 12px; color: var(--muted); }
+
+  /* FINAL SCORECARD */
+  .scorecard {
+    background: linear-gradient(135deg, rgba(255,107,53,0.08), rgba(26,140,255,0.08));
+    border: 1px solid rgba(255,107,53,0.25);
+    border-radius: 16px; padding: 28px; overflow: hidden; position: relative;
+  }
+  .scorecard::after {
+    content: '🏆';
+    position: absolute; right: 24px; top: 24px; font-size: 48px; opacity: 0.15;
+  }
+  .vs-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .team-score { text-align: center; }
+  .team-score .tname { font-family: 'Bebas Neue', cursive; font-size: 26px; letter-spacing: 2px; }
+  .team-score .tscore { font-family: 'Bebas Neue', cursive; font-size: 52px; line-height: 1; color: var(--accent); }
+  .team-score .tovers { font-size: 12px; color: var(--muted); }
+  .vs-divider { font-family: 'Bebas Neue', cursive; font-size: 24px; color: var(--muted); }
+  .result-tag {
+    text-align: center; padding: 10px 0;
+    border-top: 1px solid var(--border); margin-top: 16px;
+    font-weight: 700; color: var(--india); font-size: 15px; letter-spacing: 0.5px;
+  }
+
+  /* NRR BAR CHART */
+  .nrr-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .nrr-team { width: 90px; font-size: 13px; font-weight: 600; text-align: right; flex-shrink: 0; }
+  .nrr-bar-wrap { flex: 1; }
+  .nrr-bar-pos { height: 22px; border-radius: 0 6px 6px 0; display: flex; align-items: center; padding-left: 8px; font-size: 12px; font-weight: 700; color: #fff; min-width: 4px; }
+  .nrr-bar-neg { height: 22px; border-radius: 6px 0 0 6px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 12px; font-weight: 700; color: #fff; min-width: 4px; }
+
+  /* VENUE MAP */
+  .venues-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+  .venue-card {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px; font-size: 13px;
+    transition: border-color 0.2s;
+  }
+  .venue-card:hover { border-color: var(--accent3); }
+  .venue-name { font-weight: 700; margin-bottom: 4px; color: var(--accent3); font-size: 14px; }
+  .venue-city { color: var(--muted); font-size: 12px; margin-bottom: 2px; }
+  .venue-cap { font-size: 11px; color: var(--muted); }
+
+  /* RECORDS */
+  .records-list { }
+  .record-item {
+    display: flex; align-items: flex-start; gap: 14px; padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .record-item:last-child { border-bottom: none; }
+  .record-num {
+    width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+    background: rgba(245,166,35,0.12); border: 1px solid rgba(245,166,35,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', cursive; font-size: 16px; color: var(--accent);
+  }
+  .record-text { font-size: 14px; line-height: 1.5; color: var(--text); }
+  .record-text strong { color: var(--accent); }
+
+  /* ANIMATED ENTRANCE */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .anim { animation: fadeUp 0.5s ease forwards; }
+  .anim-1 { animation-delay: 0.05s; }
+  .anim-2 { animation-delay: 0.10s; }
+  .anim-3 { animation-delay: 0.15s; }
+  .anim-4 { animation-delay: 0.20s; }
+  .anim-5 { animation-delay: 0.25s; }
+  .anim-6 { animation-delay: 0.30s; }
+
+  /* FOOTER */
+  footer {
+    text-align: center; padding: 32px 0;
+    color: var(--muted); font-size: 12px; border-top: 1px solid var(--border);
+    margin-top: 40px; letter-spacing: 0.5px;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+  /* QUALIFIED BADGE */
+  .q-badge {
+    display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; padding: 2px 6px; border-radius: 3px;
+    background: rgba(62,207,142,0.15); color: var(--pak);
+  }
+  .q-badge.sf { background: rgba(245,166,35,0.15); color: var(--accent); }
+
+  .scroll-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-inner">
+      <div>
+        <div class="tournament-label">ICC Men's T20 World Cup</div>
+        <h1>T20 <span>World</span><br>Cup 2026</h1>
+        <div class="champion-badge">🏆 India — Champions</div>
+      </div>
+      <div class="header-meta">
+        India &amp; Sri Lanka &nbsp;·&nbsp; Feb 7 – Mar 8, 2026<br>
+        20 Teams &nbsp;·&nbsp; 55 Matches &nbsp;·&nbsp; 8 Venues<br>
+        <strong style="color:var(--text)">10th Edition</strong>
+      </div>
+    </div>
+
+    <nav class="tabs">
+      <button class="tab active" onclick="switchTab('overview')">Overview</button>
+      <button class="tab" onclick="switchTab('batting')">Batting</button>
+      <button class="tab" onclick="switchTab('bowling')">Bowling</button>
+      <button class="tab" onclick="switchTab('standings')">Standings</button>
+      <button class="tab" onclick="switchTab('final')">Final</button>
+      <button class="tab" onclick="switchTab('records')">Records</button>
+      <button class="tab" onclick="switchTab('venues')">Venues</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+  <!-- ═══ OVERVIEW ═══ -->
+  <section class="section active" id="overview">
+
+    <div class="stat-row">
+      <div class="stat-card anim anim-1" style="--accent-line: var(--india)">
+        <div class="stat-label">Total Matches</div>
+        <div class="stat-value">55</div>
+        <div class="stat-sub">Group + Knockouts</div>
+      </div>
+      <div class="stat-card anim anim-2" style="--accent-line: #ffd700">
+        <div class="stat-label">Total Centuries</div>
+        <div class="stat-value">6</div>
+        <div class="stat-sub">Most in any T20 WC edition</div>
+      </div>
+      <div class="stat-card anim anim-3" style="--accent-line: var(--accent3)">
+        <div class="stat-label">Highest Total</div>
+        <div class="stat-value">255<span style="font-size:22px">/5</span></div>
+        <div class="stat-sub">India vs NZ (Final)</div>
+      </div>
+      <div class="stat-card anim anim-4" style="--accent-line: var(--pak)">
+        <div class="stat-label">Most Runs</div>
+        <div class="stat-value">383</div>
+        <div class="stat-sub">Sahibzada Farhan (PAK)</div>
+      </div>
+      <div class="stat-card anim anim-5" style="--accent-line: var(--accent2)">
+        <div class="stat-label">Most Wickets</div>
+        <div class="stat-value">14</div>
+        <div class="stat-sub">Bumrah &amp; Varun (IND)</div>
+      </div>
+      <div class="stat-card anim anim-6" style="--accent-line: var(--accent)">
+        <div class="stat-label">Fastest Hundred</div>
+        <div class="stat-value">33<span style="font-size:18px"> balls</span></div>
+        <div class="stat-sub">Finn Allen (NZ)</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel anim anim-1">
+        <div class="panel-title"><span></span>🏆 Awards</div>
+        <div class="awards-grid" style="grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="award-card">
+            <div class="award-icon">⭐</div>
+            <div class="award-type">Player of Tournament</div>
+            <div class="award-name">Sanju Samson</div>
+            <div class="award-team">India &nbsp;·&nbsp; 321 runs</div>
+          </div>
+          <div class="award-card">
+            <div class="award-icon">🏏</div>
+            <div class="award-type">Most Runs</div>
+            <div class="award-name">Sahibzada Farhan</div>
+            <div class="award-team">Pakistan &nbsp;·&nbsp; 383 runs</div>
+          </div>
+          <div class="award-card">
+            <div class="award-icon">🎯</div>
+            <div class="award-type">Most Wickets (Joint)</div>
+            <div class="award-name">Jasprit Bumrah</div>
+            <div class="award-team">India &nbsp;·&nbsp; 14 wickets</div>
+          </div>
+          <div class="award-card">
+            <div class="award-icon">🎯</div>
+            <div class="award-type">Most Wickets (Joint)</div>
+            <div class="award-name">Varun Chakravarthy</div>
+            <div class="award-team">India &nbsp;·&nbsp; 14 wickets</div>
+          </div>
+          <div class="award-card">
+            <div class="award-icon">💥</div>
+            <div class="award-type">Fastest Century</div>
+            <div class="award-name">Finn Allen</div>
+            <div class="award-team">New Zealand &nbsp;·&nbsp; 33 balls</div>
+          </div>
+          <div class="award-card">
+            <div class="award-icon">🔥</div>
+            <div class="award-type">Best Bowling</div>
+            <div class="award-name">Romario Shepherd</div>
+            <div class="award-team">West Indies &nbsp;·&nbsp; 5/20</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel anim anim-2">
+        <div class="panel-title"><span></span>📊 NRR — Semi-Finalists</div>
+        <div style="padding-top:8px">
+          <div class="nrr-row">
+            <div class="nrr-team" style="color:var(--india)">India</div>
+            <div class="nrr-bar-wrap">
+              <div class="nrr-bar-pos" style="background:var(--india);width:calc(280px * 2.80 / 3.12);">+2.80</div>
+            </div>
+          </div>
+          <div class="nrr-row">
+            <div class="nrr-team" style="color:var(--sa)">S. Africa</div>
+            <div class="nrr-bar-wrap">
+              <div class="nrr-bar-pos" style="background:var(--sa);width:calc(280px * 1.50 / 3.12);">+1.50</div>
+            </div>
+          </div>
+          <div class="nrr-row">
+            <div class="nrr-team" style="color:var(--eng)">England</div>
+            <div class="nrr-bar-wrap">
+              <div class="nrr-bar-pos" style="background:var(--eng);width:calc(280px * 1.20 / 3.12);">+1.20</div>
+            </div>
+          </div>
+          <div class="nrr-row">
+            <div class="nrr-team" style="color:var(--nz)">New Zealand</div>
+            <div class="nrr-bar-wrap">
+              <div class="nrr-bar-pos" style="background:var(--nz);width:calc(280px * 0.40 / 3.12);">+0.40</div>
+            </div>
+          </div>
+
+          <div style="margin-top:24px">
+          <div class="panel-title" style="font-size:16px;margin-bottom:12px;"><span></span>Group Stage Leaders</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div style="background:var(--surface2);border-radius:10px;padding:14px;border:1px solid var(--border);">
+              <div style="font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">Group A &amp; SE1</div>
+              <div style="font-weight:700;color:var(--india);font-size:15px;">🇮🇳 India</div>
+              <div style="font-size:12px;color:var(--muted);">W5 · Pts 10 · NRR +3.12</div>
+            </div>
+            <div style="background:var(--surface2);border-radius:10px;padding:14px;border:1px solid var(--border);">
+              <div style="font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">Group C &amp; SE2</div>
+              <div style="font-weight:700;color:var(--eng);font-size:15px;">🏴󠁧󠁢󠁥󠁮󠁧󠁿 England</div>
+              <div style="font-size:12px;color:var(--muted);">W5 · Pts 10 · NRR +2.50</div>
+            </div>
+            <div style="background:var(--surface2);border-radius:10px;padding:14px;border:1px solid var(--border);">
+              <div style="font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">Group D</div>
+              <div style="font-weight:700;color:var(--sa);font-size:15px;">🇿🇦 South Africa</div>
+              <div style="font-size:12px;color:var(--muted);">W4 · Pts 8 · NRR +2.00</div>
+            </div>
+            <div style="background:var(--surface2);border-radius:10px;padding:14px;border:1px solid var(--border);">
+              <div style="font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">Group B</div>
+              <div style="font-weight:700;color:#4CAF50;font-size:15px;">🇱🇰 Sri Lanka</div>
+              <div style="font-size:12px;color:var(--muted);">W4 · Pts 8 · NRR +1.95</div>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ═══ BATTING ═══ -->
+  <section class="section" id="batting">
+    <div class="panel">
+      <div class="panel-title"><span></span>🏏 Top Run Scorers</div>
+      <div class="scroll-table">
+      <div class="table-header batting-row" style="padding:0 0 10px">
+        <div></div><div>Batter</div>
+        <div style="text-align:right">Runs</div>
+        <div style="text-align:right">Avg</div>
+        <div style="text-align:right">SR</div>
+        <div style="text-align:right">100s/50s</div>
+      </div>
+
+      <!-- Rows -->
+      <div id="batting-list"></div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title"><span></span>💥 Strike Rate Leaders (Top 8)</div>
+        <div id="sr-chart"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span></span>🎯 Boundary Hitters</div>
+        <div id="boundary-chart"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ BOWLING ═══ -->
+  <section class="section" id="bowling">
+    <div class="panel">
+      <div class="panel-title"><span></span>🎳 Top Wicket Takers</div>
+      <div class="scroll-table">
+      <div class="table-header bowling-row" style="padding:0 0 10px">
+        <div></div><div>Bowler</div>
+        <div style="text-align:right">Wkts</div>
+        <div style="text-align:right">Avg</div>
+        <div style="text-align:right">Econ</div>
+        <div style="text-align:right">Best</div>
+      </div>
+      <div id="bowling-list"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title"><span></span>📉 Economy Rate Comparison</div>
+      <div id="economy-chart"></div>
+    </div>
+  </section>
+
+  <!-- ═══ STANDINGS ═══ -->
+  <section class="section" id="standings">
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title"><span></span>Group A</div>
+        <div id="group-a"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span></span>Group B</div>
+        <div id="group-b"></div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title"><span></span>Group C</div>
+        <div id="group-c"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span></span>Group D</div>
+        <div id="group-d"></div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title"><span></span>Super Eight — Group 1</div>
+        <div id="se1"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span></span>Super Eight — Group 2</div>
+        <div id="se2"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FINAL ═══ -->
+  <section class="section" id="final">
+    <div class="panel">
+      <div class="panel-title"><span></span>🏆 ICC T20 World Cup 2026 — Final</div>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:20px;">March 8, 2026 &nbsp;·&nbsp; Narendra Modi Stadium, Ahmedabad</p>
+
+      <div class="scorecard">
+        <div class="vs-row">
+          <div class="team-score">
+            <div class="tname" style="color:var(--india)">🇮🇳 INDIA</div>
+            <div class="tscore">255/5</div>
+            <div class="tovers">20 overs &nbsp;·&nbsp; Won by 96 runs</div>
+          </div>
+          <div class="vs-divider">VS</div>
+          <div class="team-score">
+            <div class="tname" style="color:var(--nz)">🇳🇿 NEW ZEALAND</div>
+            <div class="tscore">159</div>
+            <div class="tovers">All Out</div>
+          </div>
+        </div>
+        <div class="result-tag">🏆 India won by 96 runs — Champions for the 3rd time</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title"><span></span>India Batting Highlights</div>
+        <div id="india-batting"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span></span>India Bowling in Final</div>
+        <div id="india-bowling-final"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title"><span></span>🔑 Key Records from the Final</div>
+      <div class="records-list">
+        <div class="record-item">
+          <div class="record-num">1</div>
+          <div class="record-text">India scored <strong>255/5</strong> — the highest team total in T20 World Cup Final history</div>
+        </div>
+        <div class="record-item">
+          <div class="record-num">2</div>
+          <div class="record-text"><strong>Sanju Samson</strong> was named Player of the Tournament for his match-winning contributions throughout</div>
+        </div>
+        <div class="record-item">
+          <div class="record-num">3</div>
+          <div class="record-text"><strong>Jasprit Bumrah</strong> took 4/15 in the final — a bowling masterclass under pressure</div>
+        </div>
+        <div class="record-item">
+          <div class="record-num">4</div>
+          <div class="record-text">India won by <strong>96 runs</strong> — the largest margin of victory in a T20 World Cup final</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ RECORDS ═══ -->
+  <section class="section" id="records">
+    <div class="stat-row">
+      <div class="stat-card" style="--accent-line: var(--gold)">
+        <div class="stat-label">India's WC titles</div>
+        <div class="stat-value">3</div>
+        <div class="stat-sub">2007, 2024, 2026</div>
+      </div>
+      <div class="stat-card" style="--accent-line:var(--accent3)">
+        <div class="stat-label">Centuries in tournament</div>
+        <div class="stat-value">6</div>
+        <div class="stat-sub">Most in any edition</div>
+      </div>
+      <div class="stat-card" style="--accent-line: var(--pak)">
+        <div class="stat-label">Farhan's centuries</div>
+        <div class="stat-value">2</div>
+        <div class="stat-sub">First ever in single edition</div>
+      </div>
+      <div class="stat-card" style="--accent-line: var(--nz)">
+        <div class="stat-label">Allen's 100 balls</div>
+        <div class="stat-value">33</div>
+        <div class="stat-sub">Fastest T20 WC century</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title"><span></span>📋 All-Time Records Set in 2026</div>
+      <div class="records-list">
+        <div class="record-item">
+          <div class="record-num">1</div>
+          <div class="record-text"><strong>India</strong> became the first team to defend the T20 World Cup title (2024 → 2026)</div>
+        </div>
+        <div class="record-item">
+          <div class="record-num">2</div>
+          <div class="record-text"><strong>India</strong> became the first team to win three T20 World Cup titles (2007, 2024, 2026)</div>
+        </div>
+        <div class="record-item">
+          <div class="record-num">3</div>
+          <div class="record-text"><strong>India</strong> became the first host nation to win the T20 World Cup on home soil</div>
+        </div>
+        <div class="record-item">
+          <div class="record-num">4</div>
+          <div class="record-text"><strong>Finn Allen (NZ)</strong> struck the fastest century in T20 World Cup history — <strong>33 balls</strong> vs South Africa in the semi-final</div>
+        </div>
+        <div class="record-item">
+          <div class="record-num">5</div>
+          <div class="record-text"><strong>Sahibzada Farhan (PAK)</strong> set the record for most runs in a single T20 World Cup edition — <strong>383 runs</strong></div>
+        </div>
+        <div class="record-item">
+          <div class="record-num">6</div>
+          <div class="record-text"><strong>Sahibzada Farhan</strong> became the first batter to score <strong>two centuries</strong> in a single T20 World Cup edition</div>
+        </div>
+        <div class="record-item">
+          <div class="record-num">7</div>
+          <div class="record-text"><strong>6 centuries</strong> scored across the tournament — the most in any single T20 World Cup edition in history</div>
+        </div>
+        <div class="record-item">
+          <div class="record-num">8</div>
+          <div class="record-text"><strong>India 255/5</strong> vs New Zealand in the Final — the highest team total ever recorded in a T20 World Cup Final</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ VENUES ═══ -->
+  <section class="section" id="venues">
+    <div class="panel">
+      <div class="panel-title"><span></span>📍 Tournament Venues</div>
+      <div class="venues-grid" id="venues-grid"></div>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  <div class="container">
+    ICC Men's T20 World Cup 2026 &nbsp;·&nbsp;  ICC  Dashboard for analytics &amp;
+  </div>
+</footer>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const batting = [
+  { player: 'Sahibzada Farhan', team: 'PAK', m: 7, runs: 383, avg: 76.6, sr: 160.25, fours: 37, sixes: 18, hundreds: 2, fifties: 1 },
+  { player: 'Tim Seifert', team: 'NZ', m: 9, runs: 326, avg: 46.57, sr: 166.33, fours: 34, sixes: 16, hundreds: 0, fifties: 4 },
+  { player: 'Sanju Samson', team: 'IND', m: 5, runs: 321, avg: 80.25, sr: 199.38, fours: 27, sixes: 24, hundreds: 0, fifties: 4 },
+  { player: 'Ishan Kishan', team: 'IND', m: 9, runs: 317, avg: 35.22, sr: 193.29, fours: 33, sixes: 18, hundreds: 0, fifties: 3 },
+  { player: 'Finn Allen', team: 'NZ', m: 8, runs: 298, avg: 49.67, sr: 200.0, fours: 25, sixes: 20, hundreds: 1, fifties: 1 },
+  { player: 'Brian Bennett', team: 'ZIM', m: 6, runs: 292, avg: 146.0, sr: 134.56, fours: 32, sixes: 7, hundreds: 0, fifties: 3 },
+  { player: 'Aiden Markram', team: 'SA', m: 8, runs: 286, avg: 47.67, sr: 165.32, fours: 32, sixes: 11, hundreds: 0, fifties: 2 },
+  { player: 'Jacob Bethell', team: 'ENG', m: 8, runs: 280, avg: 35.0, sr: 152.17, fours: 25, sixes: 14, hundreds: 1, fifties: 1 },
+  { player: 'Shimron Hetmyer', team: 'WI', m: 7, runs: 248, avg: 41.33, sr: 186.47, fours: 16, sixes: 19, hundreds: 0, fifties: 2 },
+  { player: 'Suryakumar Yadav', team: 'IND', m: 9, runs: 242, avg: 30.25, sr: 136.72, fours: 21, sixes: 10, hundreds: 0, fifties: 2 },
+  { player: 'Will Jacks', team: 'ENG', m: 8, runs: 226, avg: 32.29, sr: 155.17, fours: 18, sixes: 9, hundreds: 0, fifties: 1 },
+  { player: 'Pathum Nissanka', team: 'SL', m: 7, runs: 208, avg: 29.71, sr: 138.67, fours: 20, sixes: 8, hundreds: 1, fifties: 1 },
+  { player: 'Quinton de Kock', team: 'SA', m: 8, runs: 205, avg: 25.63, sr: 145.39, fours: 22, sixes: 8, hundreds: 0, fifties: 1 },
+  { player: 'Harry Brook', team: 'ENG', m: 8, runs: 198, avg: 24.75, sr: 140.43, fours: 20, sixes: 7, hundreds: 1, fifties: 0 },
+  { player: 'Abhishek Sharma', team: 'IND', m: 9, runs: 195, avg: 21.67, sr: 165.25, fours: 18, sixes: 12, hundreds: 0, fifties: 1 },
+];
+
+const bowling = [
+  { player: 'Jasprit Bumrah', team: 'IND', m: 8, wkts: 14, avg: 12.43, econ: 6.21, best: '4/15' },
+  { player: 'Varun Chakravarthy', team: 'IND', m: 9, wkts: 14, avg: 20.5, econ: 9.26, best: '3/27' },
+  { player: 'Shadley van Schalkwyk', team: 'USA', m: 4, wkts: 13, avg: 7.77, econ: 6.81, best: '4/18' },
+  { player: 'Blessing Muzarabani', team: 'ZIM', m: 6, wkts: 13, avg: 14.46, econ: 7.93, best: '4/28' },
+  { player: 'Adil Rashid', team: 'ENG', m: 8, wkts: 13, avg: 19.23, econ: 8.15, best: '3/22' },
+  { player: 'Lungi Ngidi', team: 'SA', m: 7, wkts: 12, avg: 15.58, econ: 7.19, best: '4/25' },
+  { player: 'Rachin Ravindra', team: 'NZ', m: 9, wkts: 12, avg: 12.42, econ: 7.84, best: '4/19' },
+  { player: 'Marco Jansen', team: 'SA', m: 6, wkts: 11, avg: 21.55, econ: 10.47, best: '4/30' },
+  { player: 'Maheesh Theekshana', team: 'SL', m: 7, wkts: 11, avg: 18.55, econ: 7.42, best: '3/18' },
+  { player: 'Corbin Bosch', team: 'SA', m: 7, wkts: 11, avg: 17.36, econ: 7.64, best: '3/20' },
+  { player: 'Axar Patel', team: 'IND', m: 9, wkts: 10, avg: 19.8, econ: 6.6, best: '3/27' },
+  { player: 'Romario Shepherd', team: 'WI', m: 7, wkts: 10, avg: 9.0, econ: 3.75, best: '5/20' },
+  { player: 'Arshdeep Singh', team: 'IND', m: 9, wkts: 10, avg: 22.1, econ: 6.91, best: '3/25' },
+  { player: 'Hardik Pandya', team: 'IND', m: 9, wkts: 9, avg: 23.44, econ: 7.54, best: '3/28' },
+  { player: 'Lockie Ferguson', team: 'NZ', m: 9, wkts: 9, avg: 24.67, econ: 6.73, best: '3/30' },
+];
+
+const points = {
+  A: [
+    { team: 'India', p: 10, w: 5, l: 0, nr: 0, nrr: '+3.12', q: 'Yes' },
+    { team: 'Pakistan', p: 8, w: 4, l: 1, nr: 0, nrr: '+1.85', q: 'Yes' },
+    { team: 'Netherlands', p: 4, w: 2, l: 3, nr: 0, nrr: '-0.45', q: 'No' },
+    { team: 'USA', p: 2, w: 1, l: 4, nr: 0, nrr: '-1.20', q: 'No' },
+    { team: 'Namibia', p: 0, w: 0, l: 5, nr: 0, nrr: '-3.10', q: 'No' },
+  ],
+  B: [
+    { team: 'Sri Lanka', p: 8, w: 4, l: 1, nr: 0, nrr: '+1.95', q: 'Yes' },
+    { team: 'Zimbabwe', p: 7, w: 3, l: 1, nr: 1, nrr: '+0.65', q: 'Yes' },
+    { team: 'Australia', p: 5, w: 2, l: 2, nr: 1, nrr: '+0.30', q: 'No' },
+    { team: 'Ireland', p: 3, w: 1, l: 3, nr: 1, nrr: '-0.85', q: 'No' },
+    { team: 'Oman', p: 0, w: 0, l: 5, nr: 0, nrr: '-2.05', q: 'No' },
+  ],
+  C: [
+    { team: 'England', p: 10, w: 5, l: 0, nr: 0, nrr: '+2.50', q: 'Yes' },
+    { team: 'West Indies', p: 6, w: 3, l: 2, nr: 0, nrr: '+0.80', q: 'Yes' },
+    { team: 'Scotland', p: 4, w: 2, l: 3, nr: 0, nrr: '-0.15', q: 'No' },
+    { team: 'Nepal', p: 2, w: 1, l: 4, nr: 0, nrr: '-1.10', q: 'No' },
+    { team: 'Italy', p: 0, w: 0, l: 5, nr: 0, nrr: '-2.85', q: 'No' },
+  ],
+  D: [
+    { team: 'South Africa', p: 8, w: 4, l: 1, nr: 0, nrr: '+2.00', q: 'Yes' },
+    { team: 'New Zealand', p: 8, w: 4, l: 1, nr: 0, nrr: '+1.75', q: 'Yes' },
+    { team: 'Afghanistan', p: 4, w: 2, l: 3, nr: 0, nrr: '-0.40', q: 'No' },
+    { team: 'Canada', p: 2, w: 1, l: 4, nr: 0, nrr: '-1.30', q: 'No' },
+    { team: 'UAE', p: 0, w: 0, l: 5, nr: 0, nrr: '-2.25', q: 'No' },
+  ],
+  SE1: [
+    { team: 'India', p: 6, w: 3, l: 0, nr: 0, nrr: '+2.80', q: 'Yes - SF' },
+    { team: 'South Africa', p: 6, w: 3, l: 0, nr: 0, nrr: '+1.50', q: 'Yes - SF' },
+    { team: 'West Indies', p: 2, w: 1, l: 2, nr: 0, nrr: '-0.60', q: 'No' },
+    { team: 'Zimbabwe', p: 0, w: 0, l: 3, nr: 0, nrr: '-2.90', q: 'No' },
+  ],
+  SE2: [
+    { team: 'England', p: 5, w: 2, l: 0, nr: 1, nrr: '+1.20', q: 'Yes - SF' },
+    { team: 'New Zealand', p: 3, w: 1, l: 1, nr: 1, nrr: '+0.40', q: 'Yes - SF' },
+    { team: 'Pakistan', p: 3, w: 1, l: 1, nr: 1, nrr: '-0.30', q: 'No' },
+    { team: 'Sri Lanka', p: 0, w: 0, l: 3, nr: 0, nrr: '-1.50', q: 'No' },
+  ],
+};
+
+const venues = [
+  { name: 'Narendra Modi Stadium', city: 'Ahmedabad', country: 'India', cap: '132,000' },
+  { name: 'M.A. Chidambaram Stadium', city: 'Chennai', country: 'India', cap: '50,000' },
+  { name: 'Arun Jaitley Stadium', city: 'Delhi', country: 'India', cap: '41,820' },
+  { name: 'Eden Gardens', city: 'Kolkata', country: 'India', cap: '68,000' },
+  { name: 'Wankhede Stadium', city: 'Mumbai', country: 'India', cap: '33,000' },
+  { name: 'R. Premadasa Stadium', city: 'Colombo', country: 'Sri Lanka', cap: '35,000' },
+  { name: 'Sinhalese Sports Club', city: 'Colombo', country: 'Sri Lanka', cap: '10,000' },
+  { name: 'Pallekele Cricket Stadium', city: 'Kandy', country: 'Sri Lanka', cap: '35,000' },
+];
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function teamTag(t) {
+  const map = {
+    IND: 'tag-ind', NZ: 'tag-nz', PAK: 'tag-pak', ENG: 'tag-eng',
+    SA: 'tag-sa', WI: 'tag-wi', ZIM: 'tag-zim', USA: 'tag-usa', SL: 'tag-sl',
+  };
+  return `<span class="team-tag ${map[t] || 'tag-usa'}">${t}</span>`;
+}
+
+function rankClass(i) {
+  if (i === 0) return 'gold';
+  if (i === 1) return 'silver';
+  if (i === 2) return 'bronze';
+  return '';
+}
+
+function bar(val, max, color) {
+  const pct = Math.round((val / max) * 100);
+  return `<div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>`;
+}
+
+// ── BATTING LIST ─────────────────────────────────────────────────────────────
+function renderBatting() {
+  const maxRuns = batting[0].runs;
+  const html = batting.map((b, i) => `
+    <div class="leader-row batting-row">
+      <div class="rank ${rankClass(i)}">${i + 1}</div>
+      <div class="player-info">
+        <div class="name">${b.player}</div>
+        ${teamTag(b.team)}
+        ${bar(b.runs, maxRuns, i < 3 ? 'var(--accent)' : 'var(--muted)')}
+      </div>
+      <div class="stat-col"><div class="label">Runs</div><div class="val highlight-val">${b.runs}</div></div>
+      <div class="stat-col"><div class="label">Avg</div><div class="val">${b.avg}</div></div>
+      <div class="stat-col"><div class="label">SR</div><div class="val" style="color:${b.sr >= 175 ? 'var(--pak)' : 'inherit'}">${b.sr}</div></div>
+      <div class="stat-col"><div class="label">100/50</div><div class="val">${b.hundreds}/${b.fifties}</div></div>
+    </div>
+  `).join('');
+  document.getElementById('batting-list').innerHTML = html;
+}
+
+// SR Chart
+function renderSRChart() {
+  const top = [...batting].sort((a, b) => b.sr - a.sr).slice(0, 8);
+  const maxSR = top[0].sr;
+  const teamColors = { IND: '#ff6b35', NZ: '#1a8cff', PAK: '#3ecf8e', ENG: '#c084fc', SA: '#fbbf24', WI: '#e63946', ZIM: '#4cc9f0' };
+  const html = top.map(b => `
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="font-size:13px;font-weight:600">${b.player.split(' ').pop()} ${teamTag(b.team)}</span>
+        <span style="font-size:13px;font-weight:700;color:${teamColors[b.team] || '#fff'}">${b.sr}</span>
+      </div>
+      <div class="bar-bg"><div class="bar-fill" style="width:${(b.sr / maxSR * 100).toFixed(1)}%;background:${teamColors[b.team] || 'var(--accent)'}"></div></div>
+    </div>
+  `).join('');
+  document.getElementById('sr-chart').innerHTML = html;
+}
+
+// Boundary chart
+function renderBoundaryChart() {
+  const top = [...batting].sort((a, b) => (b.fours + b.sixes * 2) - (a.fours + a.sixes * 2)).slice(0, 8);
+  const html = top.map(b => `
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="font-size:13px;font-weight:600">${b.player.split(' ').pop()} ${teamTag(b.team)}</span>
+        <span style="font-size:12px;color:var(--muted)"><span style="color:var(--accent)">${b.fours}</span> 4s · <span style="color:var(--accent2)">${b.sixes}</span> 6s</span>
+      </div>
+      <div style="display:flex;gap:3px;height:10px">
+        ${Array(Math.min(b.fours, 30)).fill(0).map(() => `<div style="flex:1;background:var(--accent);border-radius:1px;max-width:10px;opacity:0.7"></div>`).join('')}
+        ${Array(Math.min(b.sixes, 20)).fill(0).map(() => `<div style="flex:1;background:var(--accent2);border-radius:1px;max-width:10px"></div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('boundary-chart').innerHTML = html;
+}
+
+// ── BOWLING LIST ──────────────────────────────────────────────────────────────
+function renderBowling() {
+  const maxWkts = bowling[0].wkts;
+  const html = bowling.map((b, i) => `
+    <div class="leader-row bowling-row">
+      <div class="rank ${rankClass(i)}">${i + 1}</div>
+      <div class="player-info">
+        <div class="name">${b.player}</div>
+        ${teamTag(b.team)}
+        ${bar(b.wkts, maxWkts, i < 3 ? 'var(--accent2)' : 'var(--muted)')}
+      </div>
+      <div class="stat-col"><div class="label">Wkts</div><div class="val highlight-val" style="color:var(--accent2)">${b.wkts}</div></div>
+      <div class="stat-col"><div class="label">Avg</div><div class="val">${b.avg}</div></div>
+      <div class="stat-col"><div class="label">Econ</div><div class="val" style="color:${b.econ < 7 ? 'var(--pak)' : b.econ > 9 ? 'var(--accent2)' : 'inherit'}">${b.econ}</div></div>
+      <div class="stat-col"><div class="label">Best</div><div class="val" style="color:var(--accent)">${b.best}</div></div>
+    </div>
+  `).join('');
+  document.getElementById('bowling-list').innerHTML = html;
+}
+
+function renderEconomyChart() {
+  const sorted = [...bowling].sort((a, b) => a.econ - b.econ);
+  const maxE = 11;
+  const html = sorted.map(b => {
+    const color = b.econ < 7 ? '#3ecf8e' : b.econ < 8.5 ? '#f5a623' : '#e63946';
+    return `
+    <div style="margin-bottom:9px;display:flex;align-items:center;gap:12px">
+      <div style="width:130px;font-size:12px;font-weight:600;flex-shrink:0">${b.player.split(' ').pop()} ${teamTag(b.team)}</div>
+      <div style="flex:1;background:var(--surface2);border-radius:4px;height:18px;overflow:hidden">
+        <div style="width:${(b.econ / maxE * 100).toFixed(1)}%;background:${color};height:100%;border-radius:4px;display:flex;align-items:center;padding-left:6px;font-size:11px;font-weight:700;color:#fff">${b.econ}</div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('economy-chart').innerHTML = html;
+}
+
+// ── STANDINGS ─────────────────────────────────────────────────────────────────
+function renderGroup(id, data) {
+  const teamColors = { India: 'var(--india)', Pakistan: 'var(--pak)', England: 'var(--eng)', 'New Zealand': 'var(--nz)', 'South Africa': 'var(--sa)', 'West Indies': 'var(--accent2)', Zimbabwe: 'var(--accent3)', 'Sri Lanka': '#4CAF50' };
+
+  const rows = data.map((t, i) => {
+    const qClass = t.q === 'Yes' ? 'q-badge' : t.q === 'Yes - SF' ? 'q-badge sf' : '';
+    const qLabel = t.q === 'Yes' ? 'Q' : t.q === 'Yes - SF' ? 'SF' : '';
+    return `
+    <div class="leader-row points-row" style="font-size:13px">
+      <div class="rank ${rankClass(i)}">${i + 1}</div>
+      <div style="font-weight:${t.q !== 'No' ? '700' : '400'};color:${teamColors[t.team] || 'var(--text)'};display:flex;align-items:center;gap:8px">
+        ${t.team}
+        ${qLabel ? `<span class="${qClass}">${qLabel}</span>` : ''}
+      </div>
+      <div style="text-align:right">${t.w}</div>
+      <div style="text-align:right">${t.l}</div>
+      <div style="text-align:right">${t.nr}</div>
+      <div style="text-align:right;color:${t.nrr.startsWith('+') ? 'var(--pak)' : 'var(--accent2)'}">${t.nrr}</div>
+      <div style="text-align:right;font-weight:700;font-family:'Bebas Neue',cursive;font-size:18px">${t.p}</div>
+    </div>`;
+  }).join('');
+
+  const header = `<div class="table-header points-row"><div></div><div>Team</div><div style="text-align:right">W</div><div style="text-align:right">L</div><div style="text-align:right">NR</div><div style="text-align:right">NRR</div><div style="text-align:right">Pts</div></div>`;
+  document.getElementById(id).innerHTML = header + rows;
+}
+
+// ── FINAL ─────────────────────────────────────────────────────────────────────
+function renderFinal() {
+  const indiaBatters = [
+    { name: 'Sanju Samson', score: 89, sr: 205 },
+    { name: 'Ishan Kishan', score: 67, sr: 195 },
+    { name: 'Suryakumar Yadav', score: 52, sr: 220 },
+    { name: 'Hardik Pandya', score: 30, sr: 180 },
+    { name: 'Abhishek Sharma', score: 11, sr: 157 },
+  ];
+  const indiaBowlers = [
+    { name: 'Jasprit Bumrah', figs: '4/15', overs: 4 },
+    { name: 'Axar Patel', figs: '3/27', overs: 4 },
+    { name: 'Varun Chakravarthy', figs: '2/28', overs: 4 },
+    { name: 'Hardik Pandya', figs: '1/20', overs: 4 },
+    { name: 'Arshdeep Singh', figs: '0/31', overs: 4 },
+  ];
+
+  document.getElementById('india-batting').innerHTML = indiaBatters.map(b => `
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div style="flex:1;font-weight:600;font-size:14px">${b.name}</div>
+      <div style="font-family:'Bebas Neue',cursive;font-size:26px;color:var(--india)">${b.score}</div>
+      <div style="font-size:12px;color:var(--muted)">SR ${b.sr}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('india-bowling-final').innerHTML = indiaBowlers.map(b => `
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div style="flex:1;font-weight:600;font-size:14px">${b.name}</div>
+      <div style="font-family:'Bebas Neue',cursive;font-size:22px;color:${b.figs.startsWith('4') || b.figs.startsWith('3') ? 'var(--accent)' : 'var(--text)'}">${b.figs}</div>
+      <div style="font-size:12px;color:var(--muted)">${b.overs} ov</div>
+    </div>
+  `).join('');
+}
+
+// ── VENUES ────────────────────────────────────────────────────────────────────
+function renderVenues() {
+  const html = venues.map(v => `
+    <div class="venue-card">
+      <div class="venue-name">${v.name}</div>
+      <div class="venue-city">${v.city} · ${v.country}</div>
+      <div class="venue-cap">Capacity: ${v.cap}</div>
+    </div>
+  `).join('');
+  document.getElementById('venues-grid').innerHTML = html;
+}
+
+// ── TAB SWITCHING ──────────────────────────────────────────────────────────────
+let initialized = { overview: true };
+
+function switchTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t => { if (t.getAttribute('onclick').includes(id)) t.classList.add('active'); });
+
+  if (!initialized[id]) {
+    initialized[id] = true;
+    if (id === 'batting') { renderBatting(); renderSRChart(); renderBoundaryChart(); }
+    if (id === 'bowling') { renderBowling(); renderEconomyChart(); }
+    if (id === 'standings') {
+      renderGroup('group-a', points.A);
+      renderGroup('group-b', points.B);
+      renderGroup('group-c', points.C);
+      renderGroup('group-d', points.D);
+      renderGroup('se1', points.SE1);
+      renderGroup('se2', points.SE2);
+    }
+    if (id === 'final') renderFinal();
+    if (id === 'venues') renderVenues();
+  }
+}
+
+// Init all sections that need it eagerly for overview
+renderVenues(); // pre-warm but only display when needed
+</script>
+</body>
+</html>
