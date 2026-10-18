@@ -1,4 +1,4 @@
-🏏 ICC T20 World Cup 2026 Analytics Dashboard
+🏏 ICC T20 World Cup 2026 Analytics Dashboard. 
 
 An interactive cricket analytics dashboard built using HTML, CSS, and JavaScript to visualize complete statistics of the ICC Men's T20 World Cup 2026.
 
